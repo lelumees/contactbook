@@ -1,9 +1,20 @@
 {
   "name": "contactbook",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "A simple contact search app",
-  "main": "index.js",
   "repository": "https://github.com/rasmuslelumees/contactbook.git",
   "author": "Rasmus Lelumees <rasmus.lelumees@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "react": "^16.5.1",
+    "react-dom": "^16.5.1",
+    "react-scripts": "1.1.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
 }
