@@ -1,0 +1,9 @@
+{
+  "name": "contactbook",
+  "version": "1.0.0",
+  "description": "A simple contact search app",
+  "main": "index.js",
+  "repository": "https://github.com/rasmuslelumees/contactbook.git",
+  "author": "Rasmus Lelumees <rasmus.lelumees@gmail.com>",
+  "license": "MIT"
+}
