@@ -79,4 +79,8 @@
     border-radius: 8px;
     height: 80px;
     color: $primary-color;
+
+    &:focus {
+        background: $bg-color-darker;
+    }
 }
