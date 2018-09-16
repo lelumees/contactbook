@@ -50,7 +50,7 @@ The service starts on port 3010 by default so the contacts endpoint should be ac
 
 ### Messaging service
 
-Follow the guidelines of whichever solution (a [simple Twilio-based service]([simple Twilio-based microservice](https://github.com/rasmuslelumees/twilio-service)) or your own solution) you went for in the setup section.
+Follow the guidelines of whichever solution (a [simple Twilio-based service](https://github.com/rasmuslelumees/twilio-service) or your own solution) you went for in the setup section.
 
 ### Contacts app
 
