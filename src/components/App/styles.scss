@@ -1,0 +1,44 @@
+@import 'styles/main.scss';
+
+.App {
+    text-align: center;
+    color: $primary-color;
+}
+
+.App-logo {
+    height: 40px;
+}
+
+.App-header {
+    height: 40px;
+    padding: 20px;
+}
+
+.App-searchbar {
+    position: relative;
+    box-sizing: border-box;
+    width: 300px;
+    margin: auto;
+}
+
+.App-searchbar-input {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: $bg-color;
+    color: $primary-color;
+    border: none;
+    border-radius: 30px;
+    padding: 8px 16px;
+    font-size: 18px;
+    font-weight: 700;
+    transition: all 0.3s;
+
+    &:focus {
+        background-color: $bg-color-dark;
+    }
+}
+
+.App-helptext {
+    font-size: 12px;
+    font-weight: 700;
+}
