@@ -15,7 +15,9 @@ class App extends Component {
             searchQuery: '',
             contacts: [],
             fetching: false,
-            error: false
+            error: false,
+            selectedContact: null,
+            message: ''
         }
 
         this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
@@ -23,6 +25,9 @@ class App extends Component {
         this.handleSearchSuccess = this.handleSearchSuccess.bind(this);
         this.handleSearchError = this.handleSearchError.bind(this);
         this.renderHelpText = this.renderHelpText.bind(this);
+        this.renderContact = this.renderContact.bind(this);
+        this.handleMessageChange = this.handleMessageChange.bind(this);
+        this.handleMessageClick = this.handleMessageClick.bind(this);
     }
 
     handleSearchSuccess(response) {
@@ -48,12 +53,30 @@ class App extends Component {
         const searchQuery = e.target.value;
 
         if (searchQuery.length < 2) {
-            this.setState({ searchQuery, contacts: [], error: false, fetching: false });
+            this.setState({ searchQuery, contacts: [], error: false, fetching: false, selectedContact: null });
             return;
         }
 
-        this.setState({ searchQuery, fetching: true, error: false });
+        this.setState({ searchQuery, fetching: true, error: false, selectedContact: null });
         searchTimeout = setTimeout(this.searchContacts, 300);
+    }
+
+    handleContactClick(contact) {
+        this.setState({ selectedContact: contact });
+    }
+
+    handleMessageChange(e) {
+        this.setState({ message: e.target.value });
+    }
+
+    handleMessageClick() {
+        const { message, selectedContact } = this.state;
+        if (!message || !message.length) return;
+        this.setState({ message: '', selectedContact: null });
+
+        axios.post(config.sendSMSUrl, { to: selectedContact.mobile, message })
+            .then(result => console.log(result))
+            .catch(err => console.error(err));
     }
 
     renderHelpText() {
@@ -62,6 +85,33 @@ class App extends Component {
         if (fetching) return 'Searching...';
         if (searchQuery.length < 2) return 'Type at least 2 characters/numbers to start searching';
         return contacts.length ? `Found ${contacts.length} contacts` : 'Sorry, I could not find anyone';
+    }
+
+    renderContact(contact, index) {
+        const { selectedContact, message } = this.state;
+        const isSelected = selectedContact && selectedContact.id === contact.id;
+
+        return (
+            <div key={index} className='App-contact'>
+                <div className='App-contact-content'>
+                    <div>{contact.name}</div>
+                    <div>{contact.mobile}</div>
+                    <div className='App-contact__actions'>
+                        { contact.mobile &&
+                            <div className='App-button' onClick={ () => { this.handleContactClick(contact)} }>
+                                Message
+                            </div>
+                        }
+                    </div>
+                </div>
+                { isSelected &&
+                    <div className=''>
+                        <textarea className='App-message-area' onChange={this.handleMessageChange}>{message}</textarea>
+                        <div className='App-button' onClick={this.handleMessageClick}>Send SMS</div>
+                    </div>
+                }
+            </div>
+        );
     }
 
     render() {
@@ -80,14 +130,8 @@ class App extends Component {
                         onChange={this.handleSearchInputChange}
                     />
                 </div>
-                <p className='App-helptext'>{this.renderHelpText()}</p>
-                <div className='App-contacts'>
-                    {
-                        contacts.map((contact, index) => {
-                            return <p key={index}>{contact.name} | {contact.mobile}</p>;
-                        })
-                    }
-                </div>
+                <p className='App-helptext'>{ this.renderHelpText() }</p>
+                <div className='App-contacts'>{ contacts.map(this.renderContact) }</div>
             </div>
         );
     }

@@ -18,7 +18,7 @@
     position: relative;
     box-sizing: border-box;
     width: 300px;
-    margin: auto;
+    margin: 0 auto;
 }
 
 .App-searchbar-input {
@@ -41,4 +41,42 @@
 .App-helptext {
     font-size: 12px;
     font-weight: 700;
+}
+
+.App-contacts {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.App-contact {
+    padding: 20px 30px;
+    background-color: $bg-color;
+    border-radius: 8px;
+    margin: 10px 0;
+}
+
+.App-contact-content {
+    display: flex;
+    justify-content: space-between;
+}
+
+.App-button {
+    cursor: pointer;
+
+    &:hover {
+        opacity: 0.8;
+    }
+}
+
+.App-message-area {
+    resize: none;
+    border: none;
+    margin: 16px 0 8px;
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    background: $bg-color-dark;
+    border-radius: 8px;
+    height: 80px;
+    color: $primary-color;
 }
