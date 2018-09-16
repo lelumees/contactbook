@@ -1,5 +1,5 @@
 # Contactbook app
-A simple app for searching contacts. 🧐
+A simple app for searching contacts and sending them SMS messages. 🧐 💌
 
 ## 🛠 Setup
 
