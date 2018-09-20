@@ -1,7 +1,14 @@
 @import url('https://fonts.googleapis.com/css?family=Lato:300,400,700');
 
 $primary-color: #945fef;
-$secondary-color: #7BBEFF;
+$secondary-color: #7bbeff;
+
+$error-color: #ff3565;
+$error-bg-color: #ffc6d3;
+
+$success-color: #31d21e;
+$success-bg-color: #ccffc6;
+
 $primary-font: 'Lato', sans-serif;
 $bg-color: lighten( $primary-color, 15% );
 

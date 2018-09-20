@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import classnames from 'classnames';
 import config from '../../config';
 import logo from '../../assets/logo.svg';
 import './styles.css';
 
 const SEARCH_TIMEOUT_MS = 300;
+const ALERT_TIMEOUT_MS = 2000;
+
 let searchTimeout;
 
 class App extends Component {
@@ -16,9 +19,10 @@ class App extends Component {
             searchQuery: '',
             contacts: [],
             fetching: false,
-            error: false,
+            searchError: false,
             selectedContact: null,
-            message: ''
+            message: '',
+            messageAlert: null
         }
 
         this.handleSearchInputChange = this.handleSearchInputChange.bind(this);
@@ -38,7 +42,7 @@ class App extends Component {
 
     handleSearchError(error) {
         console.error(error);
-        this.setState({ error: true, fetching: false });
+        this.setState({ searchError: true, fetching: false });
     }
 
     searchContacts() {
@@ -55,11 +59,11 @@ class App extends Component {
         const searchQuery = e.target.value;
 
         if (searchQuery.length < 2) {
-            this.setState({ searchQuery, contacts: [], error: false, fetching: false, selectedContact: null });
+            this.setState({ searchQuery, contacts: [], searchError: false, fetching: false, selectedContact: null });
             return;
         }
 
-        this.setState({ searchQuery, fetching: true, error: false, selectedContact: null });
+        this.setState({ searchQuery, fetching: true, searchError: false, selectedContact: null });
         searchTimeout = setTimeout(this.searchContacts, SEARCH_TIMEOUT_MS);
     }
 
@@ -75,11 +79,18 @@ class App extends Component {
         const { message, selectedContact } = this.state;
 
         if (!message || !message.length) return;
-        this.setState({ message: '', selectedContact: null });
+        this.setState({ message: '', selectedContact: null, messageAlert: null });
 
         axios.post(config.sendSMSUrl, { to: selectedContact.mobile, message })
-            .then(result => console.log(result))
-            .catch(err => console.error(err));
+            .then(result => {
+                this.setState({ messageAlert: { alert: 'Message sent successfully!', success: true } });
+                setTimeout(() => this.setState({ messageAlert: null }), ALERT_TIMEOUT_MS);
+            })
+            .catch(err => {
+                console.error(err);
+                this.setState({ messageAlert: { alert: 'Sending message failed, sorry!', error: true } });
+                setTimeout(() => this.setState({ messageAlert: null }), ALERT_TIMEOUT_MS);
+            });
     }
 
     handleCancelClick() {
@@ -87,8 +98,8 @@ class App extends Component {
     }
 
     renderHelpText() {
-        const { searchQuery, contacts, fetching, error } = this.state;
-        if (error) return 'Oops, something went wrong with the request';
+        const { searchQuery, contacts, fetching, searchError } = this.state;
+        if (searchError) return 'Oops, something went wrong with the request';
         if (fetching) return 'Searching...';
         if (searchQuery.length < 2) return 'Type at least 2 characters/numbers to start searching';
         if (!contacts.length) return 'Sorry, I could not find anyone';
@@ -116,7 +127,7 @@ class App extends Component {
                 </div>
                 { isSelected &&
                     <div className=''>
-                        <textarea className='App-message-area' onChange={this.handleMessageChange}>{message}</textarea>
+                        <textarea className='App-message-area' onChange={this.handleMessageChange} value={message}></textarea>
                         <div className='App-message-actions'>
                             <div className='App-button outlined' onClick={this.handleCancelClick}>Cancel</div>
                             <div className='App-button' onClick={this.handleMessageClick}>Send SMS</div>
@@ -127,8 +138,14 @@ class App extends Component {
         );
     }
 
+    renderAlert() {
+        const { messageAlert } = this.state;
+        const className = messageAlert.error ? 'error' : (messageAlert.success ? 'success' : '');
+        return <div className={classnames('App-alert', className)}>{messageAlert.alert}</div>;
+    }
+
     render() {
-        const { searchQuery, contacts } = this.state;
+        const { searchQuery, contacts, messageAlert } = this.state;
 
         return (
             <div className='App'>
@@ -147,6 +164,7 @@ class App extends Component {
                 </div>
                 <p className='App-helptext'>{ this.renderHelpText() }</p>
                 <div className='App-contacts'>{ contacts.map(this.renderContact) }</div>
+                { messageAlert && this.renderAlert() }
             </div>
         );
     }
