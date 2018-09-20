@@ -1,5 +1,5 @@
 # Contactbook app
-A simple app for searching contacts and sending them SMS messages. 🧐✉️
+A simple React app (based on [create-react-app](https://github.com/facebook/create-react-app/)) for searching contacts and sending them SMS messages. 🧐✉️
 
 ## 🛠 Setup
 
