@@ -11,7 +11,11 @@
 
 .App-header {
     height: 40px;
-    padding: 20px;
+    padding: 20px 0 10px;
+}
+
+.App-title {
+    color: $primary-color;
 }
 
 .App-searchbar {
@@ -24,47 +28,73 @@
 .App-searchbar-input {
     width: 100%;
     box-sizing: border-box;
-    background-color: $bg-color;
-    color: $primary-color;
+    background-color: lighten( $primary-color, 30% );
+    color: darken( $primary-color, 10% );
     border: none;
     border-radius: 30px;
-    padding: 8px 16px;
-    font-size: 18px;
+    padding: 12px 20px;
+    font-size: 16px;
     font-weight: 700;
     transition: all 0.3s;
+    text-transform: uppercase;
 
     &:focus {
-        background-color: $bg-color-dark;
+        background-color: lighten( $primary-color, 25% );
     }
 }
 
 .App-helptext {
     font-size: 12px;
     font-weight: 700;
+    color: $primary-color;
 }
 
 .App-contacts {
-    max-width: 400px;
-    margin: 0 auto;
+    max-width: 500px;
+    margin: 20px auto;
 }
 
 .App-contact {
-    padding: 20px 30px;
-    background-color: $bg-color;
+    padding: 16px 32px;
+    background-color: lighten( $primary-color, 30% );
     border-radius: 8px;
     margin: 10px 0;
 }
 
-.App-contact-content {
+.App-contact__content {
     display: flex;
     justify-content: space-between;
 }
 
+.App-contact__actions {
+    width: 100px;
+}
+
+.App-contact__data {
+    line-height: 32px;
+    text-transform: uppercase;
+    font-size: 14px;
+}
+
 .App-button {
+    display: inline-block;
+    padding: 8px 16px;
+    background: $primary-color;
+    border-radius: 8px;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 12px;
     cursor: pointer;
 
     &:hover {
         opacity: 0.8;
+    }
+
+    &.outlined {
+        color: $primary-color;
+        background: lighten( $primary-color, 33% );
+        border: 1px solid $primary-color;
     }
 }
 
@@ -73,14 +103,26 @@
     border: none;
     margin: 16px 0 8px;
     width: 100%;
-    padding: 8px;
+    padding: 12px;
     box-sizing: border-box;
-    background: $bg-color-dark;
+    background: lighten( $primary-color, 25% );
     border-radius: 8px;
     height: 80px;
     color: $primary-color;
+    font-weight: 700;
+    font-size: 12px;
+    transition: all 0.3s;
 
     &:focus {
-        background: $bg-color-darker;
+        background: lighten( $primary-color, 23% );
+    }
+}
+
+.App-message-actions {
+    display: flex;
+    justify-content: center;
+
+    .App-button + .App-button {
+        margin-left: 8px;
     }
 }

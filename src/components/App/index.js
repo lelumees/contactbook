@@ -4,6 +4,7 @@ import config from '../../config';
 import logo from '../../assets/logo.svg';
 import './styles.css';
 
+const SEARCH_TIMEOUT_MS = 300;
 let searchTimeout;
 
 class App extends Component {
@@ -28,6 +29,7 @@ class App extends Component {
         this.renderContact = this.renderContact.bind(this);
         this.handleMessageChange = this.handleMessageChange.bind(this);
         this.handleMessageClick = this.handleMessageClick.bind(this);
+        this.handleCancelClick = this.handleCancelClick.bind(this);
     }
 
     handleSearchSuccess(response) {
@@ -58,7 +60,7 @@ class App extends Component {
         }
 
         this.setState({ searchQuery, fetching: true, error: false, selectedContact: null });
-        searchTimeout = setTimeout(this.searchContacts, 300);
+        searchTimeout = setTimeout(this.searchContacts, SEARCH_TIMEOUT_MS);
     }
 
     handleContactClick(contact) {
@@ -71,6 +73,7 @@ class App extends Component {
 
     handleMessageClick() {
         const { message, selectedContact } = this.state;
+
         if (!message || !message.length) return;
         this.setState({ message: '', selectedContact: null });
 
@@ -79,12 +82,19 @@ class App extends Component {
             .catch(err => console.error(err));
     }
 
+    handleCancelClick() {
+        this.setState({ message: '', selectedContact: null });
+    }
+
     renderHelpText() {
         const { searchQuery, contacts, fetching, error } = this.state;
         if (error) return 'Oops, something went wrong with the request';
         if (fetching) return 'Searching...';
         if (searchQuery.length < 2) return 'Type at least 2 characters/numbers to start searching';
-        return contacts.length ? `Found ${contacts.length} contacts` : 'Sorry, I could not find anyone';
+        if (!contacts.length) return 'Sorry, I could not find anyone';
+
+        const countString = contacts.length === 1 ? 'contact' : 'contacts';
+        return `Found ${contacts.length} ${countString}`;
     }
 
     renderContact(contact, index) {
@@ -93,11 +103,11 @@ class App extends Component {
 
         return (
             <div key={index} className='App-contact'>
-                <div className='App-contact-content'>
-                    <div>{contact.name}</div>
-                    <div>{contact.mobile}</div>
+                <div className='App-contact__content'>
+                    <div className='App-contact__data strong'>{contact.name}</div>
+                    <div className='App-contact__data'>{contact.mobile}</div>
                     <div className='App-contact__actions'>
-                        { contact.mobile &&
+                        { contact.mobile && !isSelected &&
                             <div className='App-button' onClick={ () => { this.handleContactClick(contact)} }>
                                 Message
                             </div>
@@ -107,7 +117,10 @@ class App extends Component {
                 { isSelected &&
                     <div className=''>
                         <textarea className='App-message-area' onChange={this.handleMessageChange}>{message}</textarea>
-                        <div className='App-button' onClick={this.handleMessageClick}>Send SMS</div>
+                        <div className='App-message-actions'>
+                            <div className='App-button outlined' onClick={this.handleCancelClick}>Cancel</div>
+                            <div className='App-button' onClick={this.handleMessageClick}>Send SMS</div>
+                        </div>
                     </div>
                 }
             </div>
@@ -122,6 +135,8 @@ class App extends Component {
                 <header className='App-header'>
                     <img src={logo} className='App-logo' alt='logo' />
                 </header>
+                <h2 className='App-title'>Welcome to ContactBook!</h2>
+                <p>Search for contacts and send them messages with ease.</p>
                 <div className='App-searchbar'>
                     <input
                         type='text'
